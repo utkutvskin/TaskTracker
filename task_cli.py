@@ -38,8 +38,11 @@ if sys.argv[1] == "add":
 
 elif sys.argv[1] == "list":
     tasks = load_tasks()
+    status_filter = sys.argv[2] if len(sys.argv) > 2 else None
     for task in tasks:
-        print(f"[{task["id"]}] {task["description"]} ({task["status"]}) - {task["createdAt"]}")
+        if status_filter is None or task["status"] == status_filter:
+            print(f"[{task["id"]}] {task["description"]} ({task["status"]}) - {task["createdAt"]}")
+
 
 elif sys.argv[1] == "delete":
     tasks = load_tasks()
