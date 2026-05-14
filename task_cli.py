@@ -17,7 +17,12 @@ def save_tasks(tasks):
     with open("tasks.json", "w") as file:
         json.dump(tasks, file)
     
-
+def find_task(tasks, task_id):
+    for task in tasks:
+        if task["id"] == task_id:
+            return task
+    return None
+    
 if sys.argv[1] == "add":
     tasks = load_tasks()
     new_task = {
@@ -38,31 +43,47 @@ elif sys.argv[1] == "list":
 
 elif sys.argv[1] == "delete":
     tasks = load_tasks()
-    found = False
-    
-    for task in tasks:
-        if int(sys.argv[2]) == task["id"]:
-            found = True
-            tasks.remove(task)
-            save_tasks(tasks)
-            print(f"{task["description"]} deleted successfully.")
-    if not found:
-        print("Task ID doesn't exist.")
+    task = find_task(tasks, int(sys.argv[2]))
+    if task:
+        tasks.remove(task)
+        save_tasks(tasks)
+        print(f"{task["description"]} deleted successfully.")
+    else:
+        print("Task doesn't exist.")
 
 elif sys.argv[1] == "update":
     tasks = load_tasks()
-    found = False
+    task = find_task(tasks, int(sys.argv[2]))
 
-    for task in tasks:
-        if int(sys.argv[2]) == task["id"]:
-            found = True
-            task["description"] = sys.argv[3]
-            task["updatedAt"] = datetime.now().isoformat()
-            save_tasks(tasks)
-            print(f"Task: [{task["id"]}] {task["description"]} updated successfully at {task["updatedAt"]}.")
-    if not found:
+    if task:
+        task["description"] = sys.argv[3]
+        task["updatedAt"] = datetime.now().isoformat()
+        save_tasks(tasks)
+        print(f"Task: [{task["id"]}] {task["description"]} updated successfully at {task["updatedAt"]}.")
+    else:
         print("Task doesn't exist.")
 
+elif sys.argv[1] == "mark-done":
+    tasks = load_tasks()
+    task = find_task(tasks, int(sys.argv[2]))
+
+    if task:
+        task["status"] = "done"
+        save_tasks(tasks)
+        print(f"Task: {task["description"]} marked as done.")
+    else:
+        print("Task doesn't exist.")
+
+elif sys.argv[1] == "mark-in-progress":
+    tasks = load_tasks()
+    task = find_task(tasks, int(sys.argv[2]))
+
+    if task:
+        task["status"] = "in-progress"
+        save_tasks(tasks)
+        print(f"Task: {task["description"]} marked as in progress.")
+    else:
+        print("Task doesn't exist.")
 else:
     print("Unknown command")
 
