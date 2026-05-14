@@ -48,7 +48,20 @@ elif sys.argv[1] == "delete":
             print(f"{task["description"]} deleted successfully.")
     if not found:
         print("Task ID doesn't exist.")
-    
+
+elif sys.argv[1] == "update":
+    tasks = load_tasks()
+    found = False
+
+    for task in tasks:
+        if int(sys.argv[2]) == task["id"]:
+            found = True
+            task["description"] = sys.argv[3]
+            task["updatedAt"] = datetime.now().isoformat()
+            save_tasks(tasks)
+            print(f"Task: [{task["id"]}] {task["description"]} updated successfully at {task["updatedAt"]}.")
+    if not found:
+        print("Task doesn't exist.")
 
 else:
     print("Unknown command")
