@@ -36,6 +36,20 @@ elif sys.argv[1] == "list":
     for task in tasks:
         print(f"[{task["id"]}] {task["description"]} ({task["status"]}) - {task["createdAt"]}")
 
+elif sys.argv[1] == "delete":
+    tasks = load_tasks()
+    found = False
+    
+    for task in tasks:
+        if int(sys.argv[2]) == task["id"]:
+            found = True
+            tasks.remove(task)
+            save_tasks(tasks)
+            print(f"{task["description"]} deleted successfully.")
+    if not found:
+        print("Task ID doesn't exist.")
+    
+
 else:
     print("Unknown command")
 
