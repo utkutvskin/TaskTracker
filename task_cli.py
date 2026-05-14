@@ -1,17 +1,9 @@
 import sys
 import json
 import os
+from datetime import datetime
 
 arguments = sys.argv # List of arguments
-
-if sys.argv[1] == "add":
-    load_tasks()
-else:
-    print("Unknown command")
-
-def save_tasks(tasks):
-    with open("tasks.json", "w") as file:
-        json.dump(tasks, file)
 
 def load_tasks():
     if os.path.exists("tasks.json"):
@@ -20,4 +12,28 @@ def load_tasks():
             return data
     else:
         return []
+    
+def save_tasks(tasks):
+    with open("tasks.json", "w") as file:
+        json.dump(tasks, file)
+    
+
+if sys.argv[1] == "add":
+    tasks = load_tasks()
+    new_task = {
+        "id": len(tasks) + 1,
+        "description": sys.argv[2],
+        "status": "todo",
+        "createdAt": datetime.now().isoformat(),
+        "updatedAt": None
+    }
+    tasks.append(new_task)
+    save_tasks(tasks)
+    print(f"Task added successfully: {new_task['description']}")
+else:
+    print("Unknown command")
+
+
+
+
     
