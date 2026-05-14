@@ -30,8 +30,15 @@ if sys.argv[1] == "add":
     tasks.append(new_task)
     save_tasks(tasks)
     print(f"Task added successfully: {new_task['description']}")
+
+elif sys.argv[1] == "list":
+    tasks = load_tasks()
+    for task in tasks:
+        print(f"[{task["id"]}] {task["description"]} ({task["status"]}) - {task["createdAt"]}")
+
 else:
     print("Unknown command")
+
 
 
 
